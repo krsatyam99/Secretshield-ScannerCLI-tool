@@ -5,7 +5,7 @@ from rich.console import Console
 from secretshield.patterns import load_patterns
 from secretshield.scanner import scan_file
 
-app = typer.Typer()
+app = typer.Typer(no_args_is_help=True, add_completion=False)
 console = Console()
 
 
@@ -26,9 +26,19 @@ def scan(path: str = typer.Argument(".", help="File or directory to scan")):
         findings = scan_file(target, patterns)
         _report(findings)
     else:
-        console.print(f"Scanning directory: {target}\n")
-        # directory walking comes in Hour 3 — single file only for now
+        from secretshield.scanner import scan_directory
+        findings, scanned, skipped = scan_directory(target, patterns)
+        console.print(f"Scanning {scanned} files...\n")
+        _report(findings)
+        clean_count = scanned - len({f.file_path for f in findings})
+        console.print(f"\n[green]{clean_count} files clean[/green]")
+        if skipped > 0:
+            console.print(f"[yellow]{skipped} files skipped (binary or inaccessible)[/yellow]")
 
+@app.command("version")
+def version():
+    """Show SecretShield version."""
+    console.print("SecretShield v0.1.0")
 
 def _report(findings):
     if not findings:
