@@ -1,0 +1,32 @@
+patterns:
+  - name: AWS Access Key
+    regex: 'AKIA[0-9A-Z]{16}'
+    severity: CRITICAL
+
+  - name: AWS Secret Key
+    regex: '(?i)aws(.{0,20})?(secret|access)?[_-]?key["\s:=]+[0-9a-zA-Z/+]{40}'
+    severity: CRITICAL
+
+  - name: GCP API Key
+    regex: 'AIza[0-9A-Za-z\-_]{35}'
+    severity: CRITICAL
+
+  - name: Stripe Secret Key
+    regex: 'sk_live_[0-9a-zA-Z]{24,}'
+    severity: CRITICAL
+
+  - name: Razorpay Key
+    regex: 'rzp_(live|test)_[0-9a-zA-Z]{14,}'
+    severity: HIGH
+
+  - name: Generic JWT
+    regex: 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
+    severity: MEDIUM
+
+  - name: Database URL with credentials
+    regex: '(postgres|mysql|mongodb)(\+srv)?://[^:\s]+:[^@\s]+@[^\s]+'
+    severity: HIGH
+
+  - name: Generic API Key Assignment
+    regex: '(?i)(api[_-]?key|secret)["\s:=]+[0-9a-zA-Z\-_]{20,}'
+    severity: MEDIUM
