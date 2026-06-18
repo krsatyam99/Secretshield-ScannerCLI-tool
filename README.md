@@ -65,7 +65,7 @@ To demonstrate the security pipeline, run these commands:
 ### Option A: Local Dev
 
 ```bash
-git clone https://github.com/yourusername/SecretShield.git
+git clone https://github.com/krsatyam99/Secretshield-ScannerCLI-tool.git
 cd SecretShield
 pip install -r requirements.txt
 
