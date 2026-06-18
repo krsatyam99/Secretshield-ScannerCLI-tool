@@ -1,101 +1,104 @@
-```markdown
+
+---
+
 # SecretShield 🛡️
+
 *Automated Git-Native Security Auditing & AI Privacy Protection*
 
-## 📖 Table of Contents
-1. [Business Problem & Solution](#business-problem--solution)
-2. [Project Description](#project-description)
-3. [Architecture Design (HLD & LLD)](#architecture-design)
-4. [Installation & Setup](#installation--setup)
-5. [AI Privacy Protection](#ai-privacy-protection)
-6. [Roadmap & Milestones](#roadmap--milestones)
+---
+
+## 🚀 The Business Value
+
+In modern development, a single leaked credential can result in cloud infrastructure breaches, significant financial loss, and compromised data privacy. **SecretShield** addresses two critical modern threats:
+
+1. **Git-Leak Prevention:** Stopping high-entropy keys from entering version control.
+2. **AI-Context Sanitization:** Protecting local configuration files from being accidentally indexed by AI coding assistants (Copilot, Cursor, etc.).
 
 ---
 
-## 💼 Business Problem & Solution
-**The Problem:** Sensitive credentials (AWS Keys, Stripe Tokens, JWTs) are frequently leaked into Git repositories. Furthermore, modern AI coding assistants (like Copilot or Cursor) inadvertently index local `.env` and configuration files, exposing internal infrastructure to external models.
+## 🏗️ Architecture Overview
 
-**The Solution:** **SecretShield** is a developer-first utility that shifts security "Left." It prevents credential leaks before they are committed and monitors your workspace to ensure sensitive files are not exposed to AI coding assistants.
+SecretShield is built for high-performance security auditing using a modular Python architecture.
 
----
+### Key Modules:
 
-## 📝 Project Description
-SecretShield is a modular Python-based CLI tool. It treats security as code, utilizing a YAML-based rule engine. It provides:
-* **Pre-commit Guarding:** Intercepts secrets before they hit your Git history.
-* **Historical Forensics:** Deep-traversal audit of Git commit trees to identify leaked secrets.
-* **Workspace Watch:** Proactive monitoring to prevent sensitive local configuration files from being indexed by AI tooling.
+* **Scanner Engine:** Employs regex pattern matching combined with Shannon Entropy analysis to detect high-risk keys.
+* **Git Forensics:** Utilizes `GitPython` to perform deep-tree traversal of commit history to uncover past leaks.
+* **Privacy Watcher:** A proactive workspace monitor that identifies sensitive configuration files (`.env`, `.pem`, etc.) prone to accidental AI ingestion.
+* **Guard Rail:** An "Shift-Left" security gate that intercepts `git commit` workflows.
 
 ---
 
-## 🏗️ Architecture Design
+## 📂 Project Structure
 
-### High-Level Design (HLD)
-The system is designed as a decoupled CLI toolkit consisting of three modules: the **Scanner Engine** (Regex/Entropy), the **Git Forensics Module**, and the **Privacy Watcher**.
+```text
+SecretShield/
+├── secretshield/           # Core Logic
+│   ├── cli.py              # CLI Entry Point (Typer)
+│   ├── scanner.py          # Entropy & Regex Engine
+│   └── git_utils.py        # Git Staging & History Logic
+├── tests/                  # Test Data & Suites
+│   ├── test_secret.env     # Simulated sensitive env
+│   └── private_key.pem     # Simulated private key
+├── Dockerfile              # Containerized deployment
+└── README.md
 
-### Low-Level Design (LLD)
-* **Scanner Engine:** Uses Python `re` for pattern matching and Shannon Entropy analysis for high-risk string detection.
-* **Git Forensics:** Utilizes `GitPython` to traverse `Tree` and `Blob` structures for full repository audit.
-* **AI Privacy Guard:** A dedicated `watch` command that flags high-risk configuration files (`.env`, `.pem`, etc.) within the local workspace.
+```
 
 ---
 
-## 🚀 Installation & Setup
+## 🛠️ Feature Verification
 
-### Option A: Local Installation
+To demonstrate the security pipeline, run these commands:
+
+| Command | Purpose |
+| --- | --- |
+| `python -m secretshield.cli watch .` | **AI Privacy:** Scans for files that shouldn't be indexed. |
+| `python -m secretshield.cli scan tests/` | **Regex Audit:** Deep scan for hardcoded secrets. |
+| `git add <file> && python -m secretshield.cli guard` | **Shift-Left Guard:** Block secrets before staging. |
+| `python -m secretshield.cli history` | **Forensics:** Deep-scan repository git history. |
+
+---
+
+## ⚙️ Setup & Installation
+
+### Option A: Local Dev
+
 ```bash
-# Clone the repository
-git clone [https://github.com/yourusername/SecretShield.git](https://github.com/yourusername/SecretShield.git)
+git clone https://github.com/yourusername/SecretShield.git
 cd SecretShield
-
-# Install dependencies
 pip install -r requirements.txt
 
 ```
 
-### Option B: Docker Setup (Recommended)
+### Option B: Dockerized Scan
 
 ```bash
-# Build the container
 docker build -t secretshield .
-
-# Run a scan on your local directory
-docker run --rm -v $(pwd):/app secretshield scan .
+docker run --rm -v $(pwd):/app secretshield watch .
 
 ```
-
----
-
-## 🛡️ AI Privacy Protection
-
-To protect your workspace from accidental AI ingestion of secrets, use the built-in watchdog:
-
-```bash
-python -m secretshield.cli watch
-
-```
-
-This command performs an immediate audit of your directory to identify any sensitive files (`.env`, `.key`, `.pem`, etc.) that should be excluded from your AI coding assistant's context.
-
----
-
-## 🗺️ Roadmap & Milestones
-
-* [x] **Core Engine:** Pattern-based regex and entropy analysis.
-* [x] **Git Integration:** Pre-commit staged file analysis.
-* [x] **Forensics:** Deep traversal of Git commit trees.
-* [x] **AI Privacy:** Workspace monitoring for sensitive file exposure.
-* [x] **Reporting:** Professional CLI output and JSON export capability.
 
 ---
 
 ## 💡 Why SecretShield?
 
-* **Developer-Centric:** Zero-overhead integration into existing workflows.
-* **Privacy-First:** All scans are performed locally—no data ever leaves your machine.
-* **Modern Security:** Built to address both traditional Git leaks and modern AI-driven privacy concerns.
+* **Zero-Leak Policy:** Built to ensure secrets never reach the remote repository.
+* **Privacy-Centric:** All scanning is performed locally; no data leaves your machine.
+* **Developer-First:** Designed to integrate seamlessly into existing terminal-heavy workflows.
 
-*Built by a Senior Python Developer with a focus on security, performance, and clean, maintainable architecture.*
+*Engineered by a Senior Python Developer with a focus on clean, scalable, and secure architecture.*
 
-```
+---
 
-```
+## 🗺️ Roadmap
+
+* [x] **Core Scanner:** Pattern & Entropy analysis.
+* [x] **Git History Forensics:** Deep commit traversal.
+* [x] **AI Privacy Watch:** Proactive local file monitoring.
+* [x] **Shift-Left Guard:** Staged-file pre-commit protection.
+* [ ] **Cloud CI/CD Integration:** Automated GitHub Actions pipeline.
+
+---
+
+
