@@ -6,8 +6,7 @@ from collections import Counter
 MIN_TOKEN_LENGTH = 20
 
 # Entropy threshold above which a string looks "random" rather than natural language
-ENTROPY_THRESHOLD = 4.3
-
+ENTROPY_THRESHOLD = 5.0
 # Splits a line into candidate tokens: quoted strings, or chunks after =, :, etc.
 TOKEN_SPLIT_PATTERN = re.compile(r"""['"]([^'"]{8,})['"]|[=:]\s*([A-Za-z0-9+/_\-\.]{8,})""")
 
