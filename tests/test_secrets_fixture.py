@@ -15,7 +15,7 @@
 testaws_access_key = "AKIAABCDEFGHIJKLMNOP"
 
 # --- AWS Secret Key (CRITICAL) ---
-testaws_secret_key = "wJalrXUtnFEMIfakeKEYbPxRfiCYEXAMPLEKEY123"
+testaws_secret_key = "wJalrXUtnFEMIfakeKEYbPxRfiCYEXAMPLEKEY23"
 
 # --- GCP API Key (CRITICAL) ---
 testgcp_api_key = "AIzaSyDfakeGCPkeyEXAMPLE1234567890abcd"

@@ -2,6 +2,8 @@ from pathlib import Path
 from dataclasses import dataclass
 from secretshield.entropy import find_high_entropy_strings
 from secretshield.patterns import Pattern
+from git import Repo
+
 
 
 @dataclass
@@ -88,3 +90,34 @@ def _redact(matched: str) -> str:
     if len(matched) <= 8:
         return "*" * len(matched)
     return matched[:4] + "*" * (len(matched) - 4)
+
+
+import re
+
+def scan_history(repo_path, patterns):
+    """Scan all files across all commits with optimized streaming."""
+    repo = Repo(repo_path)
+    all_findings = []
+    
+    # Iterate through all commits
+    for commit in repo.iter_commits():
+        # Traverse the tree for this specific commit snapshot
+        for blob in commit.tree.traverse():
+            if blob.type == 'blob':
+                # Read content as bytes and decode
+                try:
+                    content = blob.data_stream.read().decode('utf-8', errors='ignore')
+                except Exception:
+                    continue
+                
+                # Check against loaded patterns
+                for pattern in patterns:
+                    # 'pattern.regex' should be a pre-compiled regex object
+                    if pattern.regex.search(content):
+                        all_findings.append({
+                            "commit": commit.hexsha,
+                            "summary": commit.summary,
+                            "file": blob.path,
+                            "pattern_name": pattern.name
+                        })
+    return all_findings
